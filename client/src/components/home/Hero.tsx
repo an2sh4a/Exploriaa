@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Particles from "./Particles";
 import background from "../../assets/images/home/hero-background.avif";
 
 export default function Hero() {
@@ -28,6 +29,7 @@ export default function Hero() {
       {/* Left Glow */}
 
       <div className="absolute inset-0 bg-gradient-to-r from-cyan-950/70 via-black/20 to-transparent" />
+      <Particles />
 
       {/* Hero Content */}
 
