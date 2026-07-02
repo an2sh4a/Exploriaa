@@ -128,3 +128,68 @@
     @apply font-sans;
     }
 }
+
+/* ==========================================================
+   EXPLORIA DESIGN SYSTEM
+========================================================== */
+
+:root {
+
+  --exploria-bg: #060b1f;
+
+  --exploria-purple: #8b5cf6;
+
+  --exploria-pink: #ec4899;
+
+  --exploria-cyan: #22d3ee;
+
+  --exploria-green: #22c55e;
+
+  --exploria-white: #f8fafc;
+
+}
+
+.text-exploria-gradient {
+
+  background: linear-gradient(
+    90deg,
+    var(--exploria-purple),
+    var(--exploria-pink)
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  background-clip: text;
+
+}
+
+.border-exploria-gradient {
+
+  border: 2px solid transparent;
+
+  background:
+    linear-gradient(#000000,#000000) padding-box,
+    linear-gradient(
+      90deg,
+      var(--exploria-purple),
+      var(--exploria-pink)
+    ) border-box;
+
+}
+
+.exploria-glow {
+
+  box-shadow:
+    0 0 10px rgba(139,92,246,.45),
+    0 0 30px rgba(236,72,153,.35);
+
+}
+
+.exploria-glow-strong {
+
+  box-shadow:
+    0 0 20px rgba(139,92,246,.6),
+    0 0 50px rgba(236,72,153,.55);
+
+}

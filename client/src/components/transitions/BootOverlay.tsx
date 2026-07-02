@@ -16,6 +16,7 @@ const logs = [
 
 export default function BootOverlay({ show }: BootOverlayProps) {
   const [progress, setProgress] = useState(0);
+  const [cursorVisible, setCursorVisible] = useState(true);
 
   useEffect(() => {
     if (!show) {
@@ -23,7 +24,11 @@ export default function BootOverlay({ show }: BootOverlayProps) {
       return;
     }
 
-    const timeout = setTimeout(() => {
+    const cursor = setInterval(() => {
+      setCursorVisible((prev) => !prev);
+    }, 500);
+
+    const delay = setTimeout(() => {
       const interval = setInterval(() => {
         setProgress((prev) => {
           if (prev >= logs.length) {
@@ -36,9 +41,12 @@ export default function BootOverlay({ show }: BootOverlayProps) {
       }, 1300);
 
       return () => clearInterval(interval);
-    }, 1400);
+    }, 1200);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(delay);
+      clearInterval(cursor);
+    };
   }, [show]);
 
   if (!show) return null;
@@ -47,19 +55,19 @@ export default function BootOverlay({ show }: BootOverlayProps) {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 1.5 }}
+      transition={{ duration: 1.4 }}
       className="fixed inset-0 z-[9999] overflow-hidden flex items-center justify-center"
     >
       {/* Background */}
 
       <motion.img
         src={background}
-        alt=""
+        alt="Boot Background"
         initial={{ scale: 1.12 }}
-        animate={{ scale: 1.24 }}
+        animate={{ scale: 1.28 }}
         transition={{
           duration: 10,
-          ease: "easeInOut"
+          ease: "easeInOut",
         }}
         className="absolute inset-0 w-full h-full object-cover"
       />
@@ -68,25 +76,35 @@ export default function BootOverlay({ show }: BootOverlayProps) {
 
       <div className="absolute inset-0 bg-black/90 backdrop-blur-2xl" />
 
+      {/* Purple / Pink Glow */}
+
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-pink-900/20" />
+
       {/* Content */}
 
-      <div className="relative z-10 w-full max-w-4xl text-center px-10">
+      <div className="relative z-10 w-full max-w-4xl px-8 text-center">
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{
-            delay: 0.7,
-            duration: 0.8
-          }}
-          className="text-cyan-300 text-2xl font-mono tracking-[0.25em]"
-        >
-          Initializing World...
-        </motion.p>
+        {/* Initializing */}
 
-        {/* Square Progress Loader */}
+        <div className="flex justify-center items-center text-3xl font-semibold tracking-[0.2em]">
 
-        <div className="flex justify-center gap-4 mt-16">
+          <span className="text-exploria-gradient">
+            Initializing
+          </span>
+
+          <span
+            className={`ml-2 text-pink-400 transition-opacity duration-150 ${
+              cursorVisible ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            █
+          </span>
+
+        </div>
+
+        {/* Loader */}
+
+        <div className="flex justify-center gap-3 mt-16">
 
           {logs.map((_, index) => (
 
@@ -94,25 +112,22 @@ export default function BootOverlay({ show }: BootOverlayProps) {
               key={index}
               animate={
                 progress === index + 1
-                  ? {
-                      scale: [1, 1.2, 1]
-                    }
+                  ? { scale: [1, 1.18, 1] }
                   : {}
               }
-              transition={{
-                duration: 0.4
-              }}
+              transition={{ duration: 0.4 }}
               className={`
-                w-9
-                h-9
+                w-10
+                h-10
                 rounded-sm
                 border
                 transition-all
                 duration-700
+
                 ${
                   progress > index
-                    ? "bg-cyan-400 border-cyan-300 shadow-[0_0_18px_#22d3ee]"
-                    : "bg-zinc-800 border-zinc-600"
+                    ? "bg-gradient-to-br from-purple-500 to-pink-500 border-pink-300 shadow-[0_0_25px_rgba(236,72,153,0.75)]"
+                    : "bg-zinc-800 border-zinc-700"
                 }
               `}
             />
@@ -127,56 +142,37 @@ export default function BootOverlay({ show }: BootOverlayProps) {
           key={progress}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="mt-14 text-cyan-200 text-xl font-mono"
+          className="mt-14 text-zinc-200 text-xl font-mono"
         >
           {progress === 0
             ? "Preparing Interface..."
             : progress === logs.length
-            ? "Cyber Guide Online"
+            ? "Initialization Complete"
             : logs[progress - 1]}
         </motion.p>
 
         {/* Completed Logs */}
 
-        <div className="mt-16 max-w-xl mx-auto text-left space-y-3">
+        <div className="mt-16 max-w-xl mx-auto text-left space-y-4">
 
           {logs.slice(0, progress).map((item, index) => (
 
-            <motion.p
-              key={index}
-              initial={{
-                opacity: 0,
-                x: -15
-              }}
-              animate={{
-                opacity: 1,
-                x: 0
-              }}
-              className="text-green-400 font-mono"
-            >
-              ✓ {item}
-            </motion.p>
-
-          ))}
-
-          {progress === logs.length && (
-
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="mt-10 text-center"
+              key={index}
+              initial={{ opacity: 0, x: -15 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="flex items-center gap-3"
             >
-              <p className="text-cyan-300 text-2xl font-semibold">
-                Cyber Guide
+
+              <div className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 shadow-[0_0_12px_rgba(236,72,153,0.8)]" />
+
+              <p className="font-mono text-purple-200">
+                {item}
               </p>
 
-              <p className="mt-3 text-zinc-300 text-lg">
-                Welcome, Explorer.
-              </p>
             </motion.div>
 
-          )}
+          ))}
 
         </div>
 
